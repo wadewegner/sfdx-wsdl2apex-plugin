@@ -1,6 +1,6 @@
 # sfdx-wsdl2apex-plugin
 
-A plugin that lets you convert WSDL into Apex classes.
+A plugin that lets you convert WSDL into Apex classes. Makes use of [WSDL2Apex](https://github.com/forcedotcom/WSDL2Apex) for the heavy lifting.
 
 ## Setup
 
