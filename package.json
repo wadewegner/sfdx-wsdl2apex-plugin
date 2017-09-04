@@ -1,6 +1,6 @@
 {
   "name": "sfdx-wsdl2apex-plugin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A plugin for the SFDX CLI that converts WSDL to Apex classes.",
   "main": "index.js",
   "author": "Wade Wegner @WadeWegner",
