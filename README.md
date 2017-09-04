@@ -8,7 +8,7 @@ This plugin requires the Salesforce CLI.
 
 ### Install as plugin
 
-Install plugin: `sfdx plugins:install sfdx-oss-plugin`
+Install plugin: `sfdx plugins:install sfdx-wsdl2apex-plugin`
 
 ### Install from source
 
