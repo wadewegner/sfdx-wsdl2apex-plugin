@@ -1,3 +1,9 @@
+/dist
+/lib
+/package-lock.json
+/tmp
+.vscode
+
 # Logs
 logs
 *.log
