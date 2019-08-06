@@ -1,0 +1,6 @@
+{
+  "commandDescription": "convert wsdl to apex",
+  "pathFlagDescription": "path to WSDL file",
+  "outputFlagDescription": "folder for saving the created files",
+  "asyncFlagDescription": "make it an async class"
+}
