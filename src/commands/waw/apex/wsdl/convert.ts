@@ -1,5 +1,5 @@
 import { flags, SfdxCommand } from "@salesforce/command";
-import { Messages, SfdxError } from "@salesforce/core";
+import { Messages } from "@salesforce/core";
 import { AnyJson } from "@salesforce/ts-types";
 const path = require("path");
 const helper = require('../../../../shared/helper.js');
@@ -40,7 +40,8 @@ export default class Convert extends SfdxCommand {
       char: "a",
       description: messages.getMessage("asyncFlagDescription"),
       required: false
-    })
+    }),
+    apiversion: flags.builtin()
   };
 
   // Comment this out if your command does not require an org username
@@ -60,10 +61,12 @@ export default class Convert extends SfdxCommand {
     let async = "yes";
     let result = '';
 
+    const apiVersion = this.flags.apiversion ? this.flags.apiversion : '46.0';
+    
     if (asyncFlag === undefined || asyncFlag === null) {
       async = "no";
     }
-
+    
     fse.ensureDirSync(outputdir);
 
     const apexWsdlPath = path.resolve(__dirname, path.join('..','..','..','..','..'));
@@ -76,39 +79,45 @@ export default class Convert extends SfdxCommand {
         recursive: true
       },
       function(evt, name) {
+
         const fileName = path.basename(name, ".cls");
 
         const staticText = `<?xml version="1.0" encoding="UTF-8"?>
-                            <ApexClass xmlns="urn:metadata.tooling.soap.sforce.com" fqn="${fileName}">
-                                <apiVersion>46.0</apiVersion>
-                                <status>Active</status>
-                            </ApexClass>`;
+<ApexClass xmlns="urn:metadata.tooling.soap.sforce.com" fqn="${fileName}">
+    <apiVersion>${apiVersion}</apiVersion>
+    <status>Active</status>
+</ApexClass>`;
 
         const resourceMetaFile = path.join(
           outputdir,
           `${fileName}.resource-meta.xml`
         );
-        fs.createWriteStream(resourceMetaFile);
+
+        fs.createWriteStream(fileName);
 
         fs.writeFile(resourceMetaFile, staticText, err => {
           if (err) {
-            return console.log(err);
+            console.log(err);
+            process.exit();
           }
 
           result = `The following Apex class and metadata file were created:\n${name}\n${resourceMetaFile}`;
-          this.ux.log(result);
+          console.log(result);
           process.exit();
         });
       }
     );
 
     helper.run(script, (commandResult, commandErr) => {
+
       if (commandErr !== undefined && commandErr !== null) {
-        throw new SfdxError(commandErr);
+        console.log(commandErr);
+        process.exit();
       }
     });
 
     // Return an object to be displayed with --json
-    return { message: result };
+    // TODO: this is happening before watch is over, need some refactoring
+    return {};
   }
 }
